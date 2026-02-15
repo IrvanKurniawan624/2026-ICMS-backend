@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICMS.Api", "ICMS.Api.csproj", "{00E2E69B-1DF2-B47F-E63E-A11CD3AD22F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00E2E69B-1DF2-B47F-E63E-A11CD3AD22F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00E2E69B-1DF2-B47F-E63E-A11CD3AD22F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E2E69B-1DF2-B47F-E63E-A11CD3AD22F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00E2E69B-1DF2-B47F-E63E-A11CD3AD22F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30272292-62E8-453F-ACDC-603C0966CB78}
+	EndGlobalSection
+EndGlobal
