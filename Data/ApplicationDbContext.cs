@@ -6,14 +6,19 @@ namespace ICMS.Api.Data;
 
 public class ApplicationDbContext : DbContext
 {
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+    public DbSet<RoomBooking> RoomBookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<RoomBooking>()
+        .ToTable("RoomBookings");
 
         //? Force Without Timezone (on pgSQL)
         modelBuilder.Entity<RoomBooking>()
