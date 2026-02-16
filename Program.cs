@@ -9,19 +9,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var canConnect = db.Database.CanConnect();
-    Console.WriteLine($"Database connection: {canConnect}");
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 
+app.UseAuthorization();
+
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

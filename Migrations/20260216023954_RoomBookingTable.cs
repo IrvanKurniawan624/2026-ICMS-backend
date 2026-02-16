@@ -12,7 +12,7 @@ namespace ICMS.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RoomBooking",
+                name: "RoomBookings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
