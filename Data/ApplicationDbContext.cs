@@ -20,27 +20,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<RoomBooking>()
         .ToTable("RoomBookings");
 
-        // //? Force Without Timezone (debug postman)
-        // modelBuilder.Entity<RoomBooking>()
-        //     .Property(b => b.StartTime)
-        //     .HasColumnType("timestamp without time zone");
-
-        // modelBuilder.Entity<RoomBooking>()
-        //     .Property(b => b.EndTime)
-        //     .HasColumnType("timestamp without time zone");
-
-        // modelBuilder.Entity<RoomBooking>()
-        //     .Property(b => b.CreatedAt)
-        //     .HasColumnType("timestamp without time zone");
-
-        // modelBuilder.Entity<RoomBooking>()
-        //     .Property(b => b.UpdatedAt)
-        //     .HasColumnType("timestamp without time zone");
-
-        // modelBuilder.Entity<RoomBooking>()
-        //     .Property(b => b.DeletedAt)
-        //     .HasColumnType("timestamp without time zone");
-
         modelBuilder.Entity<RoomBooking>().HasData(
             new RoomBooking
             {
