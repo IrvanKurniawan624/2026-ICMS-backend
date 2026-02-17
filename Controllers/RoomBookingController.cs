@@ -180,5 +180,64 @@ public class RoomBookingController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpPatch("{id}/approve")]
+    public async Task<IActionResult> ApproveBooking(Guid id)
+    {
+        var booking = await _context.RoomBookings.FindAsync(id);
+
+        if (booking == null)
+            return NotFound();
+
+        if (booking.Status != BookingStatus.Pending)
+            return BadRequest("Only pending bookings can be approved.");
+
+        booking.Status = BookingStatus.Approved;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Booking approved." });
+    }
+
+    [HttpPatch("{id}/reject")]
+    public async Task<IActionResult> RejectBooking(Guid id)
+    {
+        var booking = await _context.RoomBookings.FindAsync(id);
+
+        if (booking == null)
+            return NotFound();
+
+        if (booking.Status != BookingStatus.Pending)
+            return BadRequest("Only pending bookings can be rejected.");
+
+        booking.Status = BookingStatus.Rejected;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Booking rejected." });
+    }
+
+    [HttpGet("active")]
+    public async Task<IActionResult> GetActiveBookings()
+    {
+        var now = DateTime.UtcNow;
+
+        var bookings = await _context.RoomBookings
+            .Where(b =>
+                b.DeletedAt == null &&
+                (
+                    b.Status == BookingStatus.Pending ||
+                    (b.Status == BookingStatus.Approved &&
+                    b.EndTime.ToUniversalTime() >= now)
+                )
+            )
+            .ToListAsync();
+
+
+        return Ok(bookings);
+    }
+
+
+
 
 }
