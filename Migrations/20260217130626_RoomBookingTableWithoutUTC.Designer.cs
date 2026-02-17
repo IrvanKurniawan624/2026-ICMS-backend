@@ -3,6 +3,7 @@ using System;
 using ICMS.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ICMS.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260217130626_RoomBookingTableWithoutUTC")]
+    partial class RoomBookingTableWithoutUTC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,10 +66,10 @@ namespace ICMS.Api.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             BookerName = "Irvan Aditya Kurniawan",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            EndTime = new DateTime(2026, 1, 1, 10, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2026, 1, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             RoomName = "C231",
-                            StartTime = new DateTime(2026, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc),
+                            StartTime = new DateTime(2026, 1, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1
                         });
                 });

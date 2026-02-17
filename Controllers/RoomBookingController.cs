@@ -62,7 +62,10 @@ public class RoomBookingController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<RoomBookingResponse>> Create(CreateRoomBookingRequest request)
     {
-        if (request.EndTime <= request.StartTime)
+        var startUtc = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc);
+        var endUtc = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc);
+
+        if (endUtc <= startUtc)
             return BadRequest("EndTime must be greater than StartTime.");
 
         var booking = new RoomBooking
@@ -70,16 +73,16 @@ public class RoomBookingController : ControllerBase
             Id = Guid.NewGuid(),
             BookerName = request.BookerName,
             RoomName = request.RoomName,
-            StartTime = request.StartTime,
-            EndTime = request.EndTime,
+            StartTime = startUtc,
+            EndTime = endUtc,
             Status = BookingStatus.Pending,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
 
         _context.RoomBookings.Add(booking);
         await _context.SaveChangesAsync();
 
-        var response = new RoomBookingResponse
+        return CreatedAtAction(nameof(GetById), new { id = booking.Id }, new RoomBookingResponse
         {
             Id = booking.Id,
             BookerName = booking.BookerName,
@@ -87,10 +90,9 @@ public class RoomBookingController : ControllerBase
             StartTime = booking.StartTime,
             EndTime = booking.EndTime,
             Status = booking.Status
-        };
-
-        return CreatedAtAction(nameof(GetById), new { id = booking.Id }, response);
+        });
     }
+
 
     [HttpPut("{id}")]
     public async Task<ActionResult<RoomBookingResponse>> Update(Guid id, UpdateRoomBookingRequest request)
@@ -101,19 +103,22 @@ public class RoomBookingController : ControllerBase
         if (booking == null)
             return NotFound();
 
-        if (request.EndTime <= request.StartTime)
+        var startUtc = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc);
+        var endUtc = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc);
+
+        if (endUtc <= startUtc)
             return BadRequest("EndTime must be greater than StartTime.");
 
         booking.BookerName = request.BookerName;
         booking.RoomName = request.RoomName;
-        booking.StartTime = request.StartTime;
-        booking.EndTime = request.EndTime;
+        booking.StartTime = startUtc;
+        booking.EndTime = endUtc;
         booking.Status = request.Status;
-        booking.UpdatedAt = DateTime.Now;
+        booking.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
-        var response = new RoomBookingResponse
+        return Ok(new RoomBookingResponse
         {
             Id = booking.Id,
             BookerName = booking.BookerName,
@@ -121,9 +126,7 @@ public class RoomBookingController : ControllerBase
             StartTime = booking.StartTime,
             EndTime = booking.EndTime,
             Status = booking.Status
-        };
-
-        return Ok(response);
+        });
     }
 
     [HttpDelete("{id}")]
@@ -135,13 +138,47 @@ public class RoomBookingController : ControllerBase
         if (booking == null)
             return NotFound();
 
-        booking.DeletedAt = DateTime.Now;
+        booking.DeletedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
         return NoContent();
     }
 
+    [HttpGet("deleted")]
+    public async Task<ActionResult<IEnumerable<RoomBookingResponse>>> GetDeleted()
+    {
+        var bookings = await _context.RoomBookings
+            .Where(b => b.DeletedAt != null)
+            .Select(b => new RoomBookingResponse
+            {
+                Id = b.Id,
+                BookerName = b.BookerName,
+                RoomName = b.RoomName,
+                StartTime = b.StartTime,
+                EndTime = b.EndTime,
+                Status = b.Status
+            })
+            .ToListAsync();
 
+        return Ok(bookings);
+    }
+
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var booking = await _context.RoomBookings
+            .FirstOrDefaultAsync(b => b.Id == id && b.DeletedAt != null);
+
+        if (booking == null)
+            return NotFound();
+
+        booking.DeletedAt = null;
+        booking.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
 }
