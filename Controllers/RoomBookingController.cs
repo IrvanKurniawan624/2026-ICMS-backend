@@ -226,9 +226,8 @@ public class RoomBookingController : ControllerBase
             .Where(b =>
                 b.DeletedAt == null &&
                 (
-                    b.Status == BookingStatus.Pending ||
-                    (b.Status == BookingStatus.Approved &&
-                    b.EndTime.ToUniversalTime() >= now)
+                    b.Status == BookingStatus.Pending || 
+                    b.EndTime.ToUniversalTime() >= now
                 )
             )
             .ToListAsync();
